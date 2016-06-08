@@ -158,8 +158,13 @@ class ClickHandler
   def handle_call
     url = url_for(platform)
 
-    click_queue.push(click_to_kafka_string(:redirect_url => url))
+    url = if url.blank?
+            ENV['NOT_FOUND_URL'].blank? ? nil : ENV['NOT_FOUND_URL']
+          else
+            url
+          end
 
-    url.blank? ? ["",404] : [url, 307]
+    click_queue.push(click_to_kafka_string(:redirect_url => url))
+    url.blank? ? ["",404] : [url,307]
   end
 end

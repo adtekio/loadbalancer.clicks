@@ -191,13 +191,13 @@ class RedirectTest < Minitest::Test
 
   context "error handling" do
     should "handle exception" do
-      ENV['ERROR_PAGE_URL'] = "http://example.org/exception"
+      add_to_env('ERROR_PAGE_URL' => "http://example.org/exception") do
+        get("/click/-1/go", {:idfa_sha1 => ""},
+            {'HTTP_USER_AGENT' => "iPhone"})
 
-      get("/click/-1/go", {:idfa_sha1 => ""},
-          {'HTTP_USER_AGENT' => "iPhone"})
-
-      assert_redirect_to "exception"
-      assert_equal 0, @queue.size
+        assert_redirect_to "exception"
+        assert_equal 0, @queue.size
+      end
     end
 
     should "generate 404 if no url is found" do
@@ -216,6 +216,26 @@ class RedirectTest < Minitest::Test
                           merge("lookup_key"   => @lk_key,
                                 "idfa_comb"    => @adid,
                                 "redirect_url" => nil))
+    end
+
+    should "support a NOT_FOUND_URL if no url is found in campaign link" do
+      add_to_env('NOT_FOUND_URL' => "http://example.org/notfound") do
+        cl = generate_campaign_link(@base_data.merge(:target_url => {}))
+        unchanged_cl_data = {"campaign_link_id" => cl.id.to_s}.merge(@base_data)
+
+        get("/click/#{cl.id}/go", { :idfa => @adid },
+            {'HTTP_USER_AGENT' => "iPhone"})
+
+        assert_redirect_to "notfound"
+
+        click_details, params = pop_click
+        assert_equal "iPhone", click_details.last
+
+        assert_click_params(params, unchanged_cl_data.
+                            merge("lookup_key"   => @lk_key,
+                                  "idfa_comb"    => @adid,
+                                  "redirect_url" => "http://example.org/notfound"))
+      end
     end
   end
 end

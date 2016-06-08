@@ -74,6 +74,13 @@ class Minitest::Test
                :attribution_window_idfa        => 100,
              }.merge(merge_data))
   end
+
+  def add_to_env(changes)
+    changes.each { |k,v| ENV[k] = v }
+    yield
+  ensure
+    changes.keys.each { |key| ENV.delete(key) }
+  end
 end
 
 class RedisQueue
