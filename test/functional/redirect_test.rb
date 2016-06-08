@@ -174,7 +174,7 @@ class RedirectTest < Minitest::Test
       idfa_sha1 = "eb2e4ebe9bf98f8c92efc5f2cb468b18eb2eeb2e"
       get("/click/#{cl.id}/go", {:idfa_sha1 => idfa_sha1},
           {'HTTP_USER_AGENT' => "iPhone"})
-
+binding.pry
       lk_key = Digest::MD5.hexdigest(idfa_sha1.downcase)
       assert_redirect_to "ios"
 

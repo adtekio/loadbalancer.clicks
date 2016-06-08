@@ -40,9 +40,11 @@ class Minitest::Test
   end
 
   def assert_redirect_to(path, msg = nil)
-    assert last_response.redirect?, "Request was not redirect (#{msg})"
+    assert(last_response.redirect?,
+           "Request was not redirect" + (msg ? " (#{msg})" : ""))
     assert_equal('http://example.org/%s' % [path],
-                 last_response.headers["Location"], "Redirect location didn't match (#{msg}")
+                 last_response.headers["Location"],
+                 "Redirect location didn't match"+ (msg ? " (#{msg})" : ""))
   end
 
   def assert_click_params(params, unchanged_cl_data, msg = nil)
