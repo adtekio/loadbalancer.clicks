@@ -9,7 +9,7 @@ class ClickHandler
               :idfa_comb, :created_at, :app_name, :user_agent
 
   def initialize(params, request)
-    @camlink         = $cam_lnk_cache[params[:id].to_i]
+    @camlink      = $cam_lnk_cache[params[:id].to_i]
 
     @ip           = request.ip || '0.0.0.0'
     @adid         = params[:adid] ? ClickHandler.pimp_adid_if_broken(params[:adid]) : nil

@@ -185,5 +185,15 @@ class RedirectTest < Minitest::Test
                           merge("lookup_key"   => lk_key,
                                 "idfa_comb"    => idfa_sha1))
     end
+
+    should "handle exception" do
+      ENV['ERROR_PAGE_URL'] = "http://example.org/exception"
+
+      get("/click/-1/go", {:idfa_sha1 => ""},
+          {'HTTP_USER_AGENT' => "iPhone"})
+
+      assert_redirect_to "exception"
+      assert_equal 0, @queue.size
+    end
   end
 end
