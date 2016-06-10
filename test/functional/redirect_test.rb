@@ -22,7 +22,7 @@ class RedirectTest < Minitest::Test
     @lk_key = "eb2e4ebe9bf98f8c92efc5f2cb468b18"
   end
 
-  context "basic" do
+  context "click tracking" do
     should "do correct redirct based on platform - adid" do
       { "ios"     => "iPhone",
         "android" => "Android",
