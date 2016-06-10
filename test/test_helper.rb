@@ -18,7 +18,6 @@ require 'pry'
 require 'fakeweb'
 require 'minitest/autorun'
 
-require_relative '../lib/ruby_extensions.rb'
 require_relative '../application.rb'
 
 raise "Not Using Test Environment" if settings.environment != 'test'

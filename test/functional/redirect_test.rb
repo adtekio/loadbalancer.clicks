@@ -23,6 +23,18 @@ class RedirectTest < Minitest::Test
   end
 
   context "click tracking" do
+    should "handle nil remote ip" do
+      cl = generate_campaign_link(@base_data)
+
+      get("/click/#{cl.id}/go", { :adid => @adid },
+          { 'HTTP_USER_AGENT' => "iPhone", "REMOTE_ADDR" => nil,
+            "HTTP_X_FORWARDED_FOR" => nil})
+
+      assert_redirect_to "ios"
+      clickstr = @queue.pop.first
+      assert_match /^0\.0\.0\.0 /, clickstr
+    end
+
     should "do correct redirct based on platform - adid" do
       { "ios"     => "iPhone",
         "android" => "Android",
